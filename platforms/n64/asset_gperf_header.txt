@@ -1,0 +1,7 @@
+%{
+#include <cstring>
+#include <cstdint>
+%}
+%define slot-name path
+struct filerecord { const char *path; uint32_t offset; uint32_t size; };
+%%

@@ -1,0 +1,195 @@
+{
+    "asset" : {
+        "generator" : "Khronos glTF Blender I/O v1.8.19",
+        "version" : "2.0"
+    },
+    "extensionsUsed" : [
+        "N64_materials_gltf64",
+        "N64_image_format",
+        "N64_texture_inputs"
+    ],
+    "scene" : 0,
+    "scenes" : [
+        {
+            "name" : "Scene",
+            "nodes" : [
+                0
+            ]
+        }
+    ],
+    "nodes" : [
+        {
+            "mesh" : 0,
+            "name" : "Cube"
+        }
+    ],
+    "materials" : [
+        {
+            "extensions" : {
+                "N64_materials_gltf64" : {
+                    "combiner" : [
+                        "TEXEL0",
+                        "TEXEL1",
+                        "TEXEL0_ALPHA",
+                        "TEXEL1",
+                        "0",
+                        "0",
+                        "0",
+                        "0",
+                        "0",
+                        "0",
+                        "0",
+                        "COMBINED",
+                        "0",
+                        "0",
+                        "0",
+                        "1"
+                    ],
+                    "othermodeH" : [
+                        "two_cycle",
+                        "point_filter"
+                    ],
+                    "drawLayer" : "Opaque"
+                }
+            },
+            "name" : "material",
+            "pbrMetallicRoughness" : {
+                "baseColorTexture" : {
+                    "index" : 0
+                },
+                "extensions" : {
+                    "N64_texture_inputs" : {
+                        "tex0" : {
+                            "index" : 0
+                        },
+                        "tex1" : {
+                            "index" : 1
+                        }
+                    }
+                },
+                "metallicFactor" : 0,
+                "roughnessFactor" : 0.5
+            }
+        }
+    ],
+    "meshes" : [
+        {
+            "name" : "Cube",
+            "primitives" : [
+                {
+                    "attributes" : {
+                        "POSITION" : 0,
+                        "NORMAL" : 1,
+                        "TEXCOORD_0" : 2
+                    },
+                    "indices" : 3,
+                    "material" : 0
+                }
+            ]
+        }
+    ],
+    "textures" : [
+        {
+            "sampler" : 0,
+            "source" : 0
+        },
+        {
+            "sampler" : 0,
+            "source" : 1
+        }
+    ],
+    "images" : [
+        {
+            "extensions" : {
+                "N64_image_format" : {
+                    "format" : "RGBA16"
+                }
+            },
+            "mimeType" : "image/png",
+            "name" : "first",
+            "uri" : "../textures/first.png"
+        },
+        {
+            "extensions" : {
+                "N64_image_format" : {
+                    "format" : "RGBA16"
+                }
+            },
+            "mimeType" : "image/png",
+            "name" : "second",
+            "uri" : "../textures/second.png"
+        }
+    ],
+    "accessors" : [
+        {
+            "bufferView" : 0,
+            "componentType" : 5126,
+            "count" : 24,
+            "max" : [
+                1,
+                1,
+                1
+            ],
+            "min" : [
+                -1,
+                -1,
+                -1
+            ],
+            "type" : "VEC3"
+        },
+        {
+            "bufferView" : 1,
+            "componentType" : 5126,
+            "count" : 24,
+            "type" : "VEC3"
+        },
+        {
+            "bufferView" : 2,
+            "componentType" : 5126,
+            "count" : 24,
+            "type" : "VEC2"
+        },
+        {
+            "bufferView" : 3,
+            "componentType" : 5123,
+            "count" : 36,
+            "type" : "SCALAR"
+        }
+    ],
+    "bufferViews" : [
+        {
+            "buffer" : 0,
+            "byteLength" : 288,
+            "byteOffset" : 0
+        },
+        {
+            "buffer" : 0,
+            "byteLength" : 288,
+            "byteOffset" : 288
+        },
+        {
+            "buffer" : 0,
+            "byteLength" : 192,
+            "byteOffset" : 576
+        },
+        {
+            "buffer" : 0,
+            "byteLength" : 72,
+            "byteOffset" : 768
+        }
+    ],
+    "samplers" : [
+        {
+            "magFilter" : 9728,
+            "minFilter" : 9984,
+            "wrapS" : 10497,
+            "wrapT" : 10497
+        }
+    ],
+    "buffers" : [
+        {
+            "byteLength" : 840,
+            "uri" : "Cube.bin"
+        }
+    ]
+}
