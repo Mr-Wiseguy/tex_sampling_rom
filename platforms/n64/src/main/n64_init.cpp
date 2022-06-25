@@ -171,11 +171,14 @@ struct TileAxisState {
     int mask;
     int mirror;
     int clamp;
+    int scale;
 };
 
 struct TileState {
     TileAxisState s_state;
     TileAxisState t_state;
+    uint16_t s_scale;
+    uint16_t t_scale;
 };
 
 extern Gfx* g_gui_dlist_head;
@@ -318,6 +321,22 @@ void print_tile_state(const TileState& state, int index, int x, int y, int selec
     sprintf(buf, "%-6d", state.t_state.mask);
     pick_text_color(selected_column, 1, selected_field, row++);
     print_text(right_x, y, buf);
+
+    // Draw texture scale, but only for index 0 since it affects both tiles
+    if (index == 0) {
+        y -= 100;
+        row = -2;
+
+        sprintf(buf, "0X%04X", state.s_scale);
+        pick_text_color(selected_column, 0, selected_field, row++);
+        print_text(left_x, y, buf);
+
+        y += 10;
+
+        sprintf(buf, "0X%04X", state.t_scale);
+        pick_text_color(selected_column, 0, selected_field, row++);
+        print_text(left_x, y, buf);
+    }
 }
 
 template <typename T>
@@ -378,7 +397,7 @@ consteval TileAxisState init_tile_axis_state() {
 }
 
 consteval TileState init_tile_state() {
-    return TileState{init_tile_axis_state(), init_tile_axis_state()};
+    return TileState{init_tile_axis_state(), init_tile_axis_state(), 0x8000, 0x8000};
 }
 
 void TitleScene::draw(UNUSED bool unloading) {
@@ -411,12 +430,17 @@ void TitleScene::draw(UNUSED bool unloading) {
         selected_field--;
     }
 
-    if (selected_field < 0) {
-        selected_field = 0;
+    if (selected_field < -2) {
+        selected_field = -2;
     }
 
     if (selected_field > 5) {
         selected_field = 5;
+    }
+
+    // Force S/T scale to be column 0
+    if (selected_field < 0) {
+        selected_column = 0;
     }
 
     int delta = 0;
@@ -446,13 +470,27 @@ void TitleScene::draw(UNUSED bool unloading) {
     }
 
     if (delta != 0) {
-        switch (selected_column % 2) {
-            case 0:
-                modify_value(tile_states[selected_column / 2].s_state, selected_field, delta);
-                break;
-            case 1:
-                modify_value(tile_states[selected_column / 2].t_state, selected_field, delta);
-                break;
+        // Everything except S/T scale
+        if (selected_field > 0) {
+            switch (selected_column % 2) {
+                case 0:
+                    modify_value(tile_states[selected_column / 2].s_state, selected_field, delta);
+                    break;
+                case 1:
+                    modify_value(tile_states[selected_column / 2].t_state, selected_field, delta);
+                    break;
+            }
+        } else {
+            switch (selected_field) {
+                case -2: // S scale
+                    delta *= 0x100;
+                    tile_states[0].s_scale += delta;
+                    break;
+                case -1: // T scale
+                    delta *= 0x100;
+                    tile_states[0].t_scale += delta;
+                    break;
+            }
         }
     }
 
@@ -501,7 +539,7 @@ void TitleScene::draw(UNUSED bool unloading) {
     gSPViewport(dl_head++, &gfx::viewport);
     gSPLoadGeometryMode(dl_head++, 0);
     gSPPerspNormalize(g_dlist_head++, perspNorm);
-    gSPTexture(dl_head++, 0x8000, 0x8000, 0, 0, G_ON);
+    gSPTexture(dl_head++, tile_states[0].s_scale, tile_states[0].t_scale, 0, 0, G_ON);
     gSPMatrix(dl_head++, proj_matrix, G_MTX_PROJECTION | G_MTX_LOAD | G_MTX_NOPUSH);
     gSPMatrix(dl_head++, &ident_matrix, G_MTX_MODELVIEW | G_MTX_LOAD | G_MTX_NOPUSH);
     // gDPSetCombineLERP(dl_head++, 0, 0, 0, TEXEL0,  0, 0, 0, 0,  0, 0, 0, COMBINED,  0, 0, 0, 1);
@@ -526,7 +564,10 @@ void TitleScene::draw(UNUSED bool unloading) {
     constexpr int text_y = 150;
     constexpr int text_x = 10;
 
-    print_text(text_x, text_y, 
+    print_text(text_x, text_y - 30, 
+        "SCALES\n"
+        "SCALET\n"
+        "\n"
         "\n"
         "\n"
         "CLAMP\n"
